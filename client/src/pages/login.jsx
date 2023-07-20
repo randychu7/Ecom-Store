@@ -26,7 +26,7 @@ export default function SignIn() {
               });
 
               localStorage.setItem("token", res.data);
-              window.location = "/dashboard";
+              window.location = "/browse";
               console.log(res.data);
               // Save the access token to local storage or perform any necessary actions
               // Redirect the user to the desired page (e.g., home/dashboard)
