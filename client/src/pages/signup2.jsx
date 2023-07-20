@@ -27,19 +27,39 @@ export default function SignUp() {
 
     const hasToken = localStorage.getItem('token') !== null;
 
+    
+
+    const [data, setData] = useState({ email: '', password: ''});
     const [next, setNext] = useState(false);
 
 
     const handleNext = () =>{
       setNext(!next);
-
-      setTimeout(() => {
-        window.location = "/signup1";
-      }, 300);
     
     }
 
+    const handleChange =(e)=>{
+        setData({...data, [e.target.name]: e.target.value})
+    }
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
+        console.log(data);
+      
+        try { 
+          const res = await axios.post('http://localhost:5080/api/auth/register', {
+            email: data.email,
+            password: data.password
+          });
+          window.location = "/login";
+          console.log(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+    };
+    
+      
 
   return (
     <div className='w-full h-screen flex justify-center items-center bg-white'>
@@ -79,16 +99,45 @@ export default function SignUp() {
                 </div>
         </nav>
 
-        <div className={`w-[360px] -translate-y-44 flex flex-col justify-center items-center ${!next ? '' : "-translate-x-[50px] opacity-0 transition-all duration-200"}`} >
+        <div className={`w-[300px] -translate-y-44 flex flex-col justify-center items-center ${!next ? '' : "-translate-x-[50px] opacity-0 transition-all duration-200"}`} >
           <div className='w-full flex justify-center mb-6'><CheckCircleOutlineIcon sx={{fontSize:"50px", color:"#ee3d3d"}}/></div>
           
-          <p className='text-center text-[12px]'>STEP <span>1</span> OF <span>3</span></p>
-          <h2 className='text-2xl text-center font-bold'>Choose your plan.</h2>
-          <div className='w-[70%]'>
-            <div className='flex mb-4 mt-7'><CheckIcon sx={{fontSize:"30px", color:"#ee3d3d"}}/> No commitments. cancel anytime.</div>
-            <div className='flex mb-4 '><CheckIcon sx={{fontSize:"30px", color:"#ee3d3d"}}/> Endless entertainment for one low price.</div>
-            <div className='flex'><CheckIcon sx={{fontSize:"30px", color:"#ee3d3d"}}/> Enjoy Netflix on all your devices.</div>    
-            <button type="button" className="text-white bg-[#DB0012] w-full h-[50px] mt-9 rounded-lg" onClick={handleNext}>Next</button>
+          <p className='text-center text-[12px]'>STEP <span>3</span> OF <span>3</span></p>
+          <h2 className='text-2xl text-left font-bold'>Create a password to start your membership</h2>
+          <div className='w-full'>
+            <div className='flex mb-4 mt-3'> Just a few more steps and you're done! We hate paperwork, too.</div>
+
+            <div className='mt-4'>
+
+                      <label className='relative cursor-pointer'>
+                      <input
+                        type="text"
+                        placeholder="Input"
+                        className='h-[50px] w-full text-[15px] pl-[19px] pt-4 text-gray-500 rounded-lg  border placeholder-gray-300 placeholder-opacity-0 transition duration-200 focus:outline-black !important focus:ring-transparent focus:border-none' 
+                        id="email" name="email"
+                        value={data.email}
+                        onChange= {handleChange}
+                        />
+                          <span className='text-[14px] text-gray-600 text-opacity-70 absolute mt-[14px] left-4 transition duration-200 input-text'>Email Address</span>
+                      </label>
+
+                    
+             </div>
+             <div className='mt-5'>
+             <label className='relative cursor-pointer'>
+                      <input
+                        type="password"
+                        placeholder="Input"
+                        className='h-[50px] w-full text-[15px] pl-[20px] pt-4 text-gray-500 rounded-lg  border placeholder-gray-300 placeholder-opacity-0 transition duration-200 focus:outline-black !important focus:ring-transparent focus:border-none' 
+                        id="password" name="password"
+                        value={data.password}
+                        onChange= {handleChange}
+                        />
+                          <span className='text-[14px] text-gray-600 text-opacity-70 absolute mt-[14px] left-4 transition duration-200 input-text'>Add Password</span>
+                      </label>
+             </div>
+             
+            <button type="submit" className="text-white bg-[#DB0012] w-full h-[50px] mt-9 rounded-lg" onClick={handleSubmit}>Next</button>
          
           </div>
           
@@ -119,7 +168,5 @@ export default function SignUp() {
       </div>
 
     </div>
-
-   
   );
 }
