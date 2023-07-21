@@ -4,36 +4,40 @@ const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
-    const { username, firstName, lastName, email, password, isAdmin } = req.body;
-  
-    // Create a new user object
-    const newUser = new User({
-      firstName,
-      lastName,
-      username,
-      email,
-      password: CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString(),
-      isAdmin: isAdmin || false, // Set the isAdmin flag based on the request or default to false
-    });
-  
-    try {
-      const savedUser = await newUser.save();
-      res.status(201).json(savedUser);
-    } catch (err) {
-      res.status(500).json(err);
-    }
+  const { email, password } = req.body;
+
+  const newUser = new User({
+    email,
+    password: CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString(),
   });
+
+  try {
+    const savedUser = await newUser.save();
+    res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
   
   
   // LOGIN
   
   router.post('/login', async (req, res) => {
     try {
-      const user = await User.findOne({ username: req.body.username });
+      console.log(req.body.email)
+      const user = await User.findOne({ email: req.body.email });
   
+      console.log(user)
+
       if (!user) {
-        return res.status(401).json("Wrong User Name");
+        return res.status(401).json("Email");
       }
+
+      req.session.userId = user._id;
+
+      console.log(req.session.userId)
   
       const hashedPassword = CryptoJS.AES.decrypt(
         user.password,
@@ -56,12 +60,22 @@ router.post("/register", async (req, res) => {
         { expiresIn: "3d" }
       );
   
+      console.log(accessToken)
       const { password, ...others } = user._doc;
       res.status(200).json({ ...others, accessToken });
     } catch (err) {
       res.status(500).json(err);
     }
   });
+
+  // LOGOUT
+  router.post("/logout", (req, res) => {
+    delete req.session.userId; // or req.session.destroy();
+    localStorage.removeItem('token');
+    window.location.reload();
+    res.status(200).json({ message: 'Logout successful' });
+  });
+  
   
 
 module.exports = router;

@@ -6,6 +6,7 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import Signup1 from './pages/signup1';
 import Signup2 from './pages/signup2';
+import List from './pages/list';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signup1" element={<Signup1/>} />
           <Route path="/signup2" element={<Signup2/>} />
           <Route path="/browse" element={<Dashboard />} />
+          <Route path="/my-list" element={<List />} />
         </Routes>
 
        

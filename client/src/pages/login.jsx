@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Navbar from '../components/navbar';
+import Navbar from '../components/navbar/navbar';
 import {useState} from 'react';
 import axios from 'axios';
-import Footer from '../components/footer';
+import Footer from '../components/navbar/footer';
 
 
 
@@ -21,19 +21,18 @@ export default function SignIn() {
             e.preventDefault();
             try {
               const res = await axios.post('http://localhost:5080/api/auth/login', {
-                email: data.email,
-                password: data.password
+                  email: data.email,
+                  password: data.password
               });
-
-              localStorage.setItem("token", res.data);
+          
+              localStorage.setItem("token", res.data.accessToken);
               window.location = "/browse";
               console.log(res.data);
-              // Save the access token to local storage or perform any necessary actions
-              // Redirect the user to the desired page (e.g., home/dashboard)
-            } catch (error) {
+          } catch (error) {
               setError(true);
               console.log(error);
-            }
+          }
+          
           };
         
 

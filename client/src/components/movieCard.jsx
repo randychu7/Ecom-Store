@@ -3,14 +3,50 @@ import axios from 'axios';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AddIcon from '@mui/icons-material/Add';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import {useLocation} from 'react-router-dom';
+import RemoveIcon from '@mui/icons-material/Remove';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
-
-const MovieCard = ({ movie, svg }) => {
+const MovieCard = ({ movie, svg, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
+    const [hoveredMovie1, setHoveredMovie1] = useState(false);
+    const [hoveredMovie, setHoveredMovie] = useState(false);
+    const [hoveredMovie2, setHoveredMovie2] = useState(false);
+
+    const handleMouseHover = () => {
+        setHoveredMovie(true);
+    }
+
+    const handleMouseLeave = () => {
+        setHoveredMovie(false);
+    }
+
+    const handleMouseHover1 = () => {
+        setHoveredMovie1(true);
+    }
+    const handleMouseLeave1 = () => {
+        setHoveredMovie1(false);
+    }
+    const handleMouseHover2 = () => {
+        setHoveredMovie2(true);
+    }
+    const handleMouseLeave2 = () => {
+        setHoveredMovie2(false);
+    }
+
+
+
+
     const[genres, setGenres] = useState([]); // new genres state
     const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
+
+    const location = useLocation();
+
+    const isListPage = location.pathname === '/my-list';
   
+
 
     const getGenres = async () => {
         try{
@@ -34,6 +70,8 @@ const MovieCard = ({ movie, svg }) => {
       }
         , []);
 
+   
+
     return (
       <div 
         className='relative' 
@@ -48,37 +86,90 @@ const MovieCard = ({ movie, svg }) => {
           />
   
           <div className='w-[200px] relative z-10'>
-            {movie.poster_path ? 
-              <img 
-                className='h-[250px] ml-9' 
-                src={`${IMAGE_PATH}${movie.poster_path}`} 
-                alt=''
-              /> 
-              : null }
+          {movie.poster_path ? 
+                <img 
+                    className='h-[250px] ml-9' 
+                    src={`${IMAGE_PATH}${movie.poster_path}`} 
+                    alt=''
+                /> 
+                : null }
+
           </div>
         </div>
         
         <div className={`absolute left-[-100px] top-[-43px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
-    style={{zIndex:9999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
->
-  <div className='flex h-full w-full flex-col'>
-  <div className='h-[60%] w-full relative' style={{backgroundImage:`url(https://image.tmdb.org/t/p/w500${movie.poster_path})`,
-backgroundSize: 'cover', }}>
-    <div className='absolute w-full h-full top-0 bg-black opacity-40'></div>
-   <h2 className='absolute left-0 bottom-0 p-4 font-bold w-[50%] text-white'>{movie.title}</h2> 
-  </div>
-  <div className='h-[40%] w-full'>
-        <div className='h-full w-full'>
+                    style={{zIndex:9999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
+                >
+                <div className='flex h-full w-full flex-col'>
+                <div className='h-[60%] w-full relative' style={{backgroundImage:`url(https://image.tmdb.org/t/p/w500${movie.poster_path})`,
+                backgroundSize: 'cover', }}>
+                    <div className='absolute w-full h-full top-0 bg-black opacity-40'></div>
+                <h2 className='absolute left-0 bottom-0 p-4 font-bold w-[50%] text-white'>{movie.title}</h2> 
+                </div>
+                <div className='h-[40%] w-full'>
+                        <div className='h-full w-full'>
 
             <div className='w-full p-5 pb-4 pt-3 flex items-center'>
-                <div className='w-[40px] h-[40px] bg-white hover:bg-gray-400 flex items-center justify-center rounded-full'>
-                    <PlayArrowIcon sx={{fontSize:"30px"}}/>
+
+
+            {hoveredMovie ? (
+                    <div>
+                    <div className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[-32px] flex justify-center rounded-xl">
+                        <p className="mt-3 font-bold">Play Trailer</p>
+                    </div>
+                    <div className="absolute bottom-[118px] text-white">
+                        <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
+                    </div>
+                    </div>
+                ) : null}
+
+
+            <div
+                onMouseEnter={handleMouseHover}
+                onMouseLeave={handleMouseLeave}
+                className="w-[40px] h-[40px] relative bg-white hover:bg-gray-400 flex items-center justify-center rounded-full"
+                >
+                <PlayArrowIcon sx={{ fontSize: "30px", color: isHovered ? 'gray' : 'gray-400' }} />
                 </div>
-                <div className='w-[40px] h-[40px] border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
-                    <AddIcon/>
+
+                {hoveredMovie1 ? (
+                    <div>
+                    <div className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[12px] flex justify-center rounded-xl">
+                       
+                       {isListPage ? <p className="mt-3 font-bold">Remove From List</p> : <p className="mt-3 font-bold">Add To List</p>}
+                       
+                    </div>
+                    <div className="absolute bottom-[118px] left-[68px] text-white">
+                        <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
+                    </div>
+                    </div>
+                ) : null}
+
+
+                <div onClick={() => onClick(movie)}  onMouseEnter={handleMouseHover1}
+                onMouseLeave={handleMouseLeave1} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
+                    {isListPage ? <RemoveIcon/> : <AddIcon/> }
+                    
                 </div>
-                <div className='w-[40px] h-[40px] border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
-                    <ThumbUpOffAltIcon/>
+               
+
+
+                {hoveredMovie2 ? (
+                    <div>
+                    <div className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[60px] flex justify-center rounded-xl">
+                       
+                       <p className="mt-3 font-bold">Details</p>
+                       
+                    </div>
+                    <div className="absolute bottom-[118px] left-[117px] text-white">
+                        <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
+                    </div>
+                    </div>
+                ) : null}
+
+                <div onMouseEnter={handleMouseHover2}
+                onMouseLeave={handleMouseLeave2} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
+                    <KeyboardArrowDownIcon/>
                 </div>
             </div>
            

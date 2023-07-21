@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NavLog from '../components/navlog';
+import NavLog from '../components/navbar/navlog';
 import Slider from '../components/slider';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MovieCard from '../components/movieCard';
+import jwtDecode from 'jwt-decode';
+
 
 export default function Dashboard() {
   const [movies, setMovies] = useState([]);
+  const[tv, setTv] = useState([]); // new tv state
   const [isLoading, setIsLoading] = useState(true); // new loading state
 
   const convertDurationToHoursMinutes = (duration) => {
@@ -53,7 +56,6 @@ export default function Dashboard() {
         })
       );
   
-      console.log(moviesWithDetails);
       setMovies(moviesWithDetails);
       setIsLoading(false); // set loading state to false
     } catch (error) {
@@ -61,12 +63,39 @@ export default function Dashboard() {
       setIsLoading(false); // set loading state to false
     }
   };
-  
+
+  const fetchTv = async () => {
+    try {
+        const {data: {results}} = await axios.get(`https://api.themoviedb.org/3/trending/tv/day`, {
+          params: {
+            api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+            language: 'en-US',
+            page: 1,
+          }
+        });
+
+    
+        console.log(results);
+        setTv(results);
+        console.log(tv)
+
+        setIsLoading(false);
+    }catch(error){
+        console.log(error);
+    }
+  }
 
 
   useEffect(() => {
+
+
     fetchMovies();
+    fetchTv();
+    console.log(movies)
+    console.log(tv)
   }, []);
+
+
 
 if (isLoading) {
     return (<div>Loading...</div>);
@@ -85,6 +114,76 @@ if (isLoading) {
     "<h3>10</h3>",
 ]
 
+let token = localStorage.getItem("token");
+
+let decoded = jwtDecode(token);
+
+
+const handleSubmit = async (movie) => {
+
+    let userId = decoded.id;
+
+
+    try {
+        const data = {
+            userId: userId,
+            movieId: movie.id,
+            title: movie.title,
+            description: movie.overview,
+            poster_path: movie.poster_path,
+            duration: movie.duration,
+            genre_ids: movie.genre_ids,
+            vote_average: movie.vote_average,
+          };
+
+     console.log(data);
+  
+      const response = await axios.post("http://localhost:5080/api/favorites/add", data, {
+        
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      });
+   
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (isLoading || movies.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  const handleTvSubmit = async (tv) => {
+    let userId = decoded.id;
+    console.log(userId);
+
+    try {
+        const data = {
+            userId: userId,
+            tvId: tv.id,
+            name: tv.name,
+            overview: tv.overview,
+            poster_path: tv.poster_path,
+            genre_ids: tv.genre_ids,
+            vote_average: tv.vote_average,
+          };
+
+     console.log(data);
+  
+      const response = await axios.post("http://localhost:5080/api/favorites/addTv", data, {
+        
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      });
+   
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
   const renderMovies = movies.map((movie, index) => {
     const svg = svgs[index];
 
@@ -92,15 +191,30 @@ if (isLoading) {
       <MovieCard
         key={movie.id}
         movie={movie}
-        
+        onClick={handleSubmit}
         number={index + 1}
         svg={svg}
       />
     );
   });
 
+  const renderTv = tv.map((tv) => {
+
+    return (
+      <MovieCard
+        key={tv.id}
+        movie={tv}
+        onClick={handleTvSubmit}
+      />
+    );
+  })
+
+
+
+
 
   return (
+
     <div>
       <NavLog />
       <div className="w-full h-[45em] relative">
@@ -145,16 +259,23 @@ if (isLoading) {
 
 
       <div className="w-full h-[30em] -translate-y-[160px]">
-        <div className="p-5 flex flex-col justify-center items-center w-full h-full">
-            <div className='w-full flex text-2xl translate-y-[70px] ml-20 text-white'> <h2>Top 10 Movies in the U.S Today</h2></div>
-         
+            <div className="p-5 flex flex-col justify-center items-center w-full h-full">
 
-          <div className="flex w-full mx-auto justify-center items-center">
-            <Slider first={renderMovies.slice(0, 5)} second={renderMovies.slice(5,10)} />
-          
-          </div>
+                        <div className="flex flex-col w-full mx-auto justify-center items-center">
+                        <div className='w-full flex text-2xl translate-y-[70px] ml-20 text-white'> 
+                            <h2>Top 10 Movies in the U.S Today</h2>
+                            </div>
+                            <Slider first={renderMovies.slice(0, 5)} second={renderMovies.slice(5,10)} />
+                        </div>
+            </div>
 
-       </div>
+            <div className="flex flex-col w-full mx-auto -translate-y-[120px] justify-center items-center">
+                        <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-2 text-white'> 
+                        <h2>Trending TV Shows</h2>
+                        </div>
+
+                        <Slider first={renderTv.slice(0, 5)} second={renderTv.slice(5,10)} />
+            </div>
 
       
       
