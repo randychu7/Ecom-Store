@@ -44,7 +44,7 @@ export default function Hero() {
             </label>
 
             <div className='w-full flex justify-center mt-5 md:mt-0'>
-                <button type="button" className="text-white flex items-center justify-center bg-[#DB0012] w-[160px] h-[50px] md:w-[210px] ml-2 rounded-lg md:text-2xl font-bold md:h-[58px]"> Get Started <ArrowForwardIosIcon/></button>
+                <a href='/signup'><button type="button" className="text-white flex items-center justify-center bg-[#DB0012] w-[160px] h-[50px] md:w-[210px] ml-2 rounded-lg md:text-2xl font-bold md:h-[58px]"> Get Started <ArrowForwardIosIcon/></button></a>
             </div>
         </div>
 

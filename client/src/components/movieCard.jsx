@@ -7,13 +7,20 @@ import {useLocation} from 'react-router-dom';
 import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import CheckIcon from '@mui/icons-material/Check';
 
 
 const MovieCard = ({ movie, svg, onClick }) => {
+    const [isFavorite, setIsFavorite] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [verify, setVerify] = useState(false);
     const [hoveredMovie1, setHoveredMovie1] = useState(false);
     const [hoveredMovie, setHoveredMovie] = useState(false);
     const [hoveredMovie2, setHoveredMovie2] = useState(false);
+
+    const verifyHandler = () => {
+        setVerify(true);
+    }
 
     const handleMouseHover = () => {
         setHoveredMovie(true);
@@ -45,6 +52,7 @@ const MovieCard = ({ movie, svg, onClick }) => {
     const location = useLocation();
 
     const isListPage = location.pathname === '/my-list';
+    const isDashboard = location.pathname === '/browse';
   
 
 
@@ -58,6 +66,8 @@ const MovieCard = ({ movie, svg, onClick }) => {
             }
         });
         setGenres(genres);
+        setIsFavorite(favorites.some(favoriteMovie => favoriteMovie.movieId === movie.movieId));
+
         }catch(error){
           console.log(error);
         }
@@ -82,13 +92,13 @@ const MovieCard = ({ movie, svg, onClick }) => {
           <div
             dangerouslySetInnerHTML={{ __html: svg }}
             style={{ width: "100%", height: "100%", zIndex: 1 }}
-            className='text-[200px] flex justify-center font-bold items-center absolute right-[90px]'
+            className='text-[200px] md:text-[250px] flex justify-center font-bold items-center absolute right-[90px] md:right-[250px]'
           />
   
-          <div className='w-[200px] relative z-10'>
+          <div className='w-[200px] md:w-[500px] relative z-10'>
           {movie.poster_path ? 
                 <img 
-                    className='h-[250px] ml-9' 
+                    className='h-[250px] md:w-[250px] md:h-[300px] translate-y-[-21px] ml-10' 
                     src={`${IMAGE_PATH}${movie.poster_path}`} 
                     alt=''
                 /> 
@@ -97,7 +107,7 @@ const MovieCard = ({ movie, svg, onClick }) => {
           </div>
         </div>
         
-        <div className={`absolute left-[-100px] top-[-43px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
+        <div className={`absolute left-[-60px] top-[-43px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
                     style={{zIndex:9999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
                 >
                 <div className='flex h-full w-full flex-col'>
@@ -146,11 +156,13 @@ const MovieCard = ({ movie, svg, onClick }) => {
                 ) : null}
 
 
-                <div onClick={() => onClick(movie)}  onMouseEnter={handleMouseHover1}
-                onMouseLeave={handleMouseLeave1} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
-                    {isListPage ? <RemoveIcon/> : <AddIcon/> }
-                    
-                </div>
+<div onClick={() => {onClick(movie); verifyHandler();}} onMouseEnter={handleMouseHover1}
+    onMouseLeave={handleMouseLeave1} 
+    className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'
+>
+    {isListPage ? <RemoveIcon/> : isDashboard && verify ? <CheckIcon/> : <AddIcon/>}
+</div>
+
                
 
 
@@ -176,7 +188,7 @@ const MovieCard = ({ movie, svg, onClick }) => {
            <div className='w-full flex flex-col p-5 pt-0 text-gray-200 '>
                 
                     <div className='text-gray-200 flex'>
-                            <p className='text-green-500 mr-2'>{movie.vote_average * 10}%</p>
+                    <p className='text-green-500 mr-2'>{(movie.vote_average * 10).toString().split('.')[0]}%</p>
                             <p>{movie.duration}</p>
                     </div>
 

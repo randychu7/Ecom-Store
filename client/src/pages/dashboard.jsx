@@ -154,16 +154,18 @@ const handleSubmit = async (movie) => {
     return <div>Loading...</div>;
   }
 
+  if (isLoading || tv.length === 0) {
+    return <div>Loading...</div>;
+  }
+
   const handleTvSubmit = async (tv) => {
     let userId = decoded.id;
-    console.log(userId);
-
     try {
         const data = {
             userId: userId,
-            tvId: tv.id,
-            name: tv.name,
-            overview: tv.overview,
+            movieId: tv.id,
+            title: tv.name,
+            description: tv.overview,
             poster_path: tv.poster_path,
             genre_ids: tv.genre_ids,
             vote_average: tv.vote_average,
@@ -171,7 +173,7 @@ const handleSubmit = async (movie) => {
 
      console.log(data);
   
-      const response = await axios.post("http://localhost:5080/api/favorites/addTv", data, {
+      const response = await axios.post("http://localhost:5080/api/favorites/add", data, {
         
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -217,7 +219,7 @@ const handleSubmit = async (movie) => {
 
     <div>
       <NavLog />
-      <div className="w-full h-[45em] relative">
+      <div className="w-full h-[55em] relative">
       <div className="bg-slate-500 flex w-full h-full relative" 
      style={{ 
          backgroundImage: `url(https://image.tmdb.org/t/p/w500${movies[0].poster_path}), linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7))`, 
@@ -262,19 +264,23 @@ const handleSubmit = async (movie) => {
             <div className="p-5 flex flex-col justify-center items-center w-full h-full">
 
                         <div className="flex flex-col w-full mx-auto justify-center items-center">
-                        <div className='w-full flex text-2xl translate-y-[70px] ml-20 text-white'> 
+                        <div className='w-full flex text-2xl translate-y-[30px] ml-20 text-white'> 
                             <h2>Top 10 Movies in the U.S Today</h2>
                             </div>
                             <Slider first={renderMovies.slice(0, 5)} second={renderMovies.slice(5,10)} />
                         </div>
             </div>
 
-            <div className="flex flex-col w-full mx-auto -translate-y-[120px] justify-center items-center">
-                        <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-2 text-white'> 
+            <div className="flex flex-col w-full mx-auto -translate-y-[50px] justify-center items-center">
+                
+                          <div className="flex flex-col w-full ml-[15px] mx-auto justify-center items-center">
+
+                        <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
                         <h2>Trending TV Shows</h2>
                         </div>
-
+                    
                         <Slider first={renderTv.slice(0, 5)} second={renderTv.slice(5,10)} />
+                        </div>
             </div>
 
       

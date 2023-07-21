@@ -20,7 +20,7 @@ const logoutHandler = () =>{
 
   return (
     <nav>
-  <div className="flex absolute top-0 left-0 right-0 flex-wrap items-center justify-between max-w-[1200px] mx-auto" style={{ zIndex: 1000 }}>
+  <div className="flex absolute top-0 left-0 right-0 flex-wrap items-center justify-between max-w-[2400px] mx-auto" style={{ zIndex: 1000 }}>
         <a href='/' className="flex items-center">
           <img src="../netflix.png" className=" h-[70px] md:h-[110px] ml-6" alt=" Logo" />
           

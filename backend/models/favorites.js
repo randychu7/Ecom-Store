@@ -15,7 +15,7 @@ const favoritesSchema = new mongoose.Schema(
       title: { type: String, required: true },
       description: { type: String, required: true },
       poster_path: { type: String },
-      duration: { type: String, required: true },
+      duration: { type: String },
       vote_average: { type: Number },
       genre_ids: [{ type: Number }],
     },

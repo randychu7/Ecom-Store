@@ -69,7 +69,7 @@ export default function List() {
         <h1 className="text-2xl text-white">My List</h1>
       </div>
       <div className="w-full mt-[3em] h-[50%] flex justify-center">
-        <div className=" w-[80%] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-10  ">
+        <div className=" w-[80%] md:w-[90%] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-10  ">
           {renderMovies}
         </div>
       </div>
