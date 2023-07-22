@@ -10,13 +10,13 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
 
 
-const MovieCard = ({ movie, svg, onClick }) => {
-    const [isFavorite, setIsFavorite] = useState(false);
+const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [verify, setVerify] = useState(false);
     const [hoveredMovie1, setHoveredMovie1] = useState(false);
     const [hoveredMovie, setHoveredMovie] = useState(false);
     const [hoveredMovie2, setHoveredMovie2] = useState(false);
+  
 
     const verifyHandler = () => {
         setVerify(true);
@@ -66,8 +66,7 @@ const MovieCard = ({ movie, svg, onClick }) => {
             }
         });
         setGenres(genres);
-        setIsFavorite(favorites.some(favoriteMovie => favoriteMovie.movieId === movie.movieId));
-
+  
         }catch(error){
           console.log(error);
         }
@@ -88,17 +87,18 @@ const MovieCard = ({ movie, svg, onClick }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       > 
+      
         <div className="flex justify-center relative h-[15em]">
           <div
             dangerouslySetInnerHTML={{ __html: svg }}
             style={{ width: "100%", height: "100%", zIndex: 1 }}
-            className='text-[200px] md:text-[250px] flex justify-center font-bold items-center absolute right-[90px] md:right-[250px]'
+            className='text-[100px] md:text-[250px] flex justify-center font-bold items-center absolute right-[90px] md:right-[120px]'
           />
   
-          <div className='w-[200px] md:w-[500px] relative z-10'>
+          <div className='w-[240px] relative z-10'>
           {movie.poster_path ? 
                 <img 
-                    className='h-[250px] md:w-[250px] md:h-[300px] translate-y-[-21px] ml-10' 
+                    className='h-[340px] w-full translate-y-[-21px] ml-10' 
                     src={`${IMAGE_PATH}${movie.poster_path}`} 
                     alt=''
                 /> 
@@ -106,8 +106,10 @@ const MovieCard = ({ movie, svg, onClick }) => {
 
           </div>
         </div>
+
         
-        <div className={`absolute left-[-60px] top-[-43px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
+        
+        <div className={`absolute left-[-5px] top-[-35px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
                     style={{zIndex:9999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
                 >
                 <div className='flex h-full w-full flex-col'>
@@ -156,14 +158,14 @@ const MovieCard = ({ movie, svg, onClick }) => {
                 ) : null}
 
 
-<div onClick={() => {onClick(movie); verifyHandler();}} onMouseEnter={handleMouseHover1}
-    onMouseLeave={handleMouseLeave1} 
-    className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'
->
-    {isListPage ? <RemoveIcon/> : isDashboard && verify ? <CheckIcon/> : <AddIcon/>}
-</div>
+                <div onClick={() => {onClick(movie); verifyHandler();}} onMouseEnter={handleMouseHover1}
+                    onMouseLeave={handleMouseLeave1} 
+                    className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'
+                >
+                    {isListPage ? <RemoveIcon/> : isDashboard && verify ? <CheckIcon/> : <AddIcon/>}
+                </div>
 
-               
+                            
 
 
                 {hoveredMovie2 ? (
@@ -180,7 +182,7 @@ const MovieCard = ({ movie, svg, onClick }) => {
                 ) : null}
 
                 <div onMouseEnter={handleMouseHover2}
-                onMouseLeave={handleMouseLeave2} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
+                onMouseLeave={handleMouseLeave2} onClick={() =>{ modalChange(); setSelectedMovieId(movie.id);}} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
                     <KeyboardArrowDownIcon/>
                 </div>
             </div>

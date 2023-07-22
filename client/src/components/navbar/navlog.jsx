@@ -36,8 +36,7 @@ export default function navLogin (){
             <h2 className='text-gray-300 ml-2 text-[12px] md:hidden flex'>Browse</h2>
             <ul className='w-2/3 text-[12px] ml-4 hidden md:flex justify-center items-center gap-6 '>
               <li className='text-gray-300 hover:text-gray-500 hover:cursor-pointer'><a href='/browse'>Home</a></li>
-              <li className='text-gray-400 hover:text-gray-500 hover:cursor-pointer'><a>Tv Shows</a></li>
-              <li className='text-gray-400 hover:text-gray-500 hover:cursor-pointer'><a>New & Popular</a></li>
+        
               <li className='text-gray-400 hover:text-gray-500 hover:cursor-pointer'><a href='/my-list'>My List</a></li>
             </ul>
           </div>

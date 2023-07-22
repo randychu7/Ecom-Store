@@ -6,14 +6,30 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MovieCard from '../components/movieCard';
 import jwtDecode from 'jwt-decode';
-
+import Details from '../components/movieDetails';
 
 export default function Dashboard() {
   const [movies, setMovies] = useState([]);
-  const[tv, setTv] = useState([]); // new tv state
+  const[ comedy, setComedy] = useState([]); // new comedy state\
+  const[ mystery, setMystery] = useState([]);
+  const[ crime, setCrime] = useState([]);
+  const[ romance, setRomance] = useState([]);
+  const[ war, setWar] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // new loading state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
 
-  const convertDurationToHoursMinutes = (duration) => {
+  const modalHandler = () => {
+    setModalOpen(true);
+    console.log(selectedMovieId);
+ }
+
+ const closeModalHandler = () => {
+    setModalOpen(false);
+ }
+
+
+  const convertDurationToHoursMinutes = (duration) => {  
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
     
@@ -40,18 +56,11 @@ export default function Dashboard() {
   
           const movieDetails = response.data;
           const duration = movieDetails.runtime;
-          
-          const releaseDates = movieDetails.release_dates.results;
-          const pg13Certification = releaseDates.find(
-            (certification) => certification.iso_3166_1 === 'US' && certification.certification === 'PG-13'
-          );
-  
           const convertedDuration = convertDurationToHoursMinutes(duration);
   
           return {
             ...movie,
-            duration: convertedDuration,
-            pg13Certification
+            duration: convertedDuration
           };
         })
       );
@@ -64,42 +73,116 @@ export default function Dashboard() {
     }
   };
 
-  const fetchTv = async () => {
+  
+  async function fetchComedy() {
     try {
-        const {data: {results}} = await axios.get(`https://api.themoviedb.org/3/trending/tv/day`, {
-          params: {
-            api_key: import.meta.env.VITE_APP_MOVIE_KEY,
-            language: 'en-US',
-            page: 1,
-          }
-        });
+      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+        params: {
+          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+          language: 'en-US',
+          with_genres: 35, // Specify the genre ID here
+        },
+      });
+  
+      const movies = response.data.results;
+      setComedy(movies);
 
-    
-        console.log(results);
-        setTv(results);
-        console.log(tv)
-
-        setIsLoading(false);
-    }catch(error){
-        console.log(error);
+    } catch (error) {
+      console.error('Failed to fetch movies by genre:', error);
+      // Handle errors as needed, e.g., show an error message in the UI
+      return [];
     }
   }
 
+  async function fetchMystery() {
+    try {
+      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+        params: {
+          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+          language: 'en-US',
+          with_genres: 9648, // Specify the genre ID here
+        },
+      });
+  
+      const movies = response.data.results;
+      setMystery(movies);
+
+    } catch (error) {
+      console.error('Failed to fetch movies by genre:', error);
+      // Handle errors as needed, e.g., show an error message in the UI
+      return [];
+    }
+  }
+
+  async function fetchCrime() {
+    try {
+      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+        params: {
+          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+          language: 'en-US',
+          with_genres: 80, // Specify the genre ID here
+        },
+      });
+  
+      const movies = response.data.results;
+      setCrime(movies);
+
+    } catch (error) {
+      console.error('Failed to fetch movies by genre:', error);
+      // Handle errors as needed, e.g., show an error message in the UI
+      return [];
+    }
+  }
+
+  async function fetchRomance() {
+    try {
+      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+        params: {
+          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+          language: 'en-US',
+          with_genres: 10749, // Specify the genre ID here
+        },
+      });
+  
+      const movies = response.data.results;
+      setRomance(movies);
+
+    } catch (error) {
+      console.error('Failed to fetch movies by genre:', error);
+      // Handle errors as needed, e.g., show an error message in the UI
+      return [];
+    }
+  }
+
+  async function fetchWar() {
+    try {
+      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+        params: {
+          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+          language: 'en-US',
+          with_genres: 10752, // Specify the genre ID here
+        },
+      });
+  
+      const movies = response.data.results;
+      setWar(movies);
+
+    } catch (error) {
+      console.error('Failed to fetch movies by genre:', error);
+      // Handle errors as needed, e.g., show an error message in the UI
+      return [];
+    }
+  }
 
   useEffect(() => {
-
-
+    fetchWar();   
+    fetchCrime();
+    fetchRomance();
+    fetchCrime();
+    fetchMystery();
+    fetchComedy();
     fetchMovies();
-    fetchTv();
-    console.log(movies)
-    console.log(tv)
   }, []);
-
-
-
-if (isLoading) {
-    return (<div>Loading...</div>);
-}
 
   const svgs = [
     "<h3>1</h3>",
@@ -153,63 +236,88 @@ const handleSubmit = async (movie) => {
   if (isLoading || movies.length === 0) {
     return <div>Loading...</div>;
   }
-
-  if (isLoading || tv.length === 0) {
-    return <div>Loading...</div>;
-  }
-
-  const handleTvSubmit = async (tv) => {
-    let userId = decoded.id;
-    try {
-        const data = {
-            userId: userId,
-            movieId: tv.id,
-            title: tv.name,
-            description: tv.overview,
-            poster_path: tv.poster_path,
-            genre_ids: tv.genre_ids,
-            vote_average: tv.vote_average,
-          };
-
-     console.log(data);
   
-      const response = await axios.post("http://localhost:5080/api/favorites/add", data, {
-        
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
-      });
-   
-    } catch (error) {
-      console.log(error);
-    }
 
-  }
 
   const renderMovies = movies.map((movie, index) => {
     const svg = svgs[index];
 
     return (
       <MovieCard
+        setSelectedMovieId={setSelectedMovieId}
         key={movie.id}
         movie={movie}
         onClick={handleSubmit}
         number={index + 1}
         svg={svg}
+        modalChange={modalHandler}
       />
     );
   });
 
-  const renderTv = tv.map((tv) => {
+  const renderMystery = mystery.map((movie) => {
 
     return (
       <MovieCard
-        key={tv.id}
-        movie={tv}
-        onClick={handleTvSubmit}
+        setSelectedMovieId={setSelectedMovieId}
+        key={movie.id}
+        movie={movie}
+        onClick={handleSubmit}
+        modalChange={modalHandler}
       />
     );
   })
+
+  const renderComedy = comedy.map((movie) => {
+    return (
+        <MovieCard
+          setSelectedMovieId={setSelectedMovieId}
+          key={movie.id}
+          movie={movie}
+          onClick={handleSubmit}
+          modalChange={modalHandler}
+        />
+      );
+  })
+
+  const renderWar = war.map((movie) => {
+    return (
+        <MovieCard
+          setSelectedMovieId={setSelectedMovieId}
+          key={movie.id}
+          movie={movie}
+          onClick={handleSubmit}
+          modalChange={modalHandler}
+        />
+      );
+  })
+
+  const renderRomance = romance.map((movie) => {
+    return (
+        <MovieCard
+          setSelectedMovieId={setSelectedMovieId}
+          key={movie.id}
+          movie={movie}
+          onClick={handleSubmit}
+          modalChange={modalHandler}
+        />
+      );
+  })
+
+  const renderCrime = crime.map((movie) => {
+    return (
+        <MovieCard
+          setSelectedMovieId={setSelectedMovieId}
+          key={movie.id}
+          movie={movie}
+          onClick={handleSubmit}
+          modalChange={modalHandler}
+        />
+      );
+  })
+
+
+
 
 
 
@@ -217,14 +325,19 @@ const handleSubmit = async (movie) => {
 
   return (
 
+
+
     <div>
       <NavLog />
+
+     {modalOpen ? <Details closeModal={closeModalHandler} movieId={selectedMovieId} /> : ''} 
+
       <div className="w-full h-[55em] relative">
       <div className="bg-slate-500 flex w-full h-full relative" 
      style={{ 
-         backgroundImage: `url(https://image.tmdb.org/t/p/w500${movies[0].poster_path}), linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7))`, 
+         backgroundImage: `url(https://image.tmdb.org/t/p/w500${movies[0].backdrop_path}), linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7))`, 
          backgroundSize: 'cover', 
-         backgroundRepeat: 'no-repeat' 
+         backgroundBlendMode: 'overlay',
      }}>
 
 
@@ -271,16 +384,68 @@ const handleSubmit = async (movie) => {
                         </div>
             </div>
 
+
+
             <div className="flex flex-col w-full mx-auto -translate-y-[50px] justify-center items-center">
                 
                           <div className="flex flex-col w-full ml-[15px] mx-auto justify-center items-center">
 
-                        <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
-                        <h2>Trending TV Shows</h2>
-                        </div>
+                            <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
+                            <h2>Mystery Movies</h2>
+                            </div>
                     
-                        <Slider first={renderTv.slice(0, 5)} second={renderTv.slice(5,10)} />
+                        <Slider first={renderMystery.slice(0, 5)} second={renderMystery.slice(5,10)} />
                         </div>
+            </div>
+
+
+            <div className="flex flex-col w-full mx-auto -translate-y-[50px] justify-center items-center">
+                
+                <div className="flex flex-col w-full ml-[15px] mx-auto justify-center items-center">
+
+                  <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
+                  <h2>Comedy Movies</h2>
+                  </div>
+          
+                     <Slider first={renderComedy.slice(0, 5)} second={renderComedy.slice(5,10)} />
+                 </div>
+            </div>
+
+            <div className="flex flex-col w-full mx-auto -translate-y-[50px] justify-center items-center">
+                
+                <div className="flex flex-col w-full ml-[15px] mx-auto justify-center items-center">
+
+                  <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
+                  <h2>War Movies</h2>
+                  </div>
+          
+                     <Slider first={renderWar.slice(0, 5)} second={renderWar.slice(5,10)} />
+                 </div>
+            </div>
+
+            <div className="flex flex-col w-full mx-auto -translate-y-[50px] justify-center items-center">
+                
+                <div className="flex flex-col w-full ml-[15px] mx-auto justify-center items-center">
+
+                  <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
+                  <h2>Romance Movies</h2>
+                  </div>
+          
+                     <Slider first={renderRomance.slice(0, 5)} second={renderRomance.slice(5,10)} />
+                 </div>
+            </div>
+
+
+            <div className="flex flex-col w-full mx-auto -translate-y-[50px] justify-center items-center">
+                
+                <div className="flex flex-col w-full ml-[15px] mx-auto justify-center items-center">
+
+                  <div className='w-full flex text-2xl translate-y-[70px] ml-[120px] mb-10 text-white'> 
+                  <h2>Crime Movies</h2>
+                  </div>
+          
+                     <Slider first={renderCrime.slice(0, 5)} second={renderCrime.slice(5,10)} />
+                 </div>
             </div>
 
       
