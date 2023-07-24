@@ -16,61 +16,71 @@ export default function navLogin (){
     const [movies, setMovies] = useState([]);
     const location = useLocation();
 
-    const isHomePage = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup';
+    const isHomePage = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/signup1' || location.pathname === '/signup2';
 
     const handleMouseEnter = () => {
       setShowDropdown(true);
     };
 
-
-       
     const searchMovies = async (searchValue) => {
-      try {
-          const { data } = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
-              params: {
-                  api_key: import.meta.env.VITE_APP_MOVIE_KEY,
-                  language: 'en-US',
-                  query: searchValue,
-                  page: 1,
-                  include_adult: false,
-              }
-          });
-          setMovies(data.results); // update the movies state
-      } catch (error) {
-          console.error('Failed to search movies:', error);
-      }
-  };
+        try {
+            const { data } = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
+                params: {
+                    api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+                    language: 'en-US',
+                    query: searchValue,
+                    page: 1,
+                    include_adult: false,
+                }
+            });
 
-  const handleSearch = (searchValue) => {
-    if (searchValue) {
-        // fetch data from API and then show the modal
-        searchMovies(searchValue);
-        setShowSearchModal(true);
-    } else {
-        setShowSearchModal(false); // hide modal if searchValue is empty
-    }
-};
+            const moviesWithTrailers = await Promise.all(data.results.map(async (movie) => {
+                const trailerData = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+                    params: {
+                        api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+                        language: 'en-US',
+                    },
+                });
 
- 
+                const youtubeTrailer = trailerData.data.results.find(video => video.site === "YouTube" && video.type === "Trailer");
+
+                return {
+                    ...movie,
+                    youtubeTrailerKey: youtubeTrailer ? youtubeTrailer.key : null
+                };
+            }));
+
+            setMovies(moviesWithTrailers); // update the movies state
+
+        } catch (error) {
+            console.error('Failed to search movies:', error);
+        }
+    };
+
+    const handleSearch = (searchValue) => {
+        if (searchValue) {
+            // fetch data from API and then show the modal
+            searchMovies(searchValue);
+            setShowSearchModal(true);
+        } else {
+            setShowSearchModal(false); // hide modal if searchValue is empty
+        }
+    };
 
     const handleMouseLeave = () => {
       setShowDropdown(false);
     };
-  
-    const logout = async () => {
-  
-          localStorage.removeItem('token');
-          window.location.href = "/login";
 
-      };
+    const logout = async () => {
+        localStorage.removeItem('token');
+        window.location.href = "/login";
+    };
 
    
     return (
-
-      <>
-      {isHomePage ? null :       <div>
-
-<nav>
+      <div>
+          {!isHomePage ? 
+        <nav>
       {showSearchModal ? <SearchModal movies={movies}/> : ''}
 
         <div className="flex absolute top-0 left-0 right-0 flex-wrap items-center justify-between mx-auto mr-8 ml-6" style={{ zIndex: 99999 }}>
@@ -149,11 +159,9 @@ export default function navLogin (){
             </ul>
           </div>
         </div>
-      </nav>
+      </nav> : ''}
 
       </div>
-}
-      </>
 
 
     )

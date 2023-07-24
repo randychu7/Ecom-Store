@@ -30,11 +30,11 @@ const logout = async () => {
         
           {hasToken ? (
               <li className="hover:translate-y-[-3px] transition-transform flex items-center justify-center">
-                <a onClick={logout} className="block py-2 pl-3 text-2xl pr-4 rounded md:p-0 ">
+                <a onClick={logout}>
                 <button
                     type="button"
                    
-                    className="text-white bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm px-5 mr-10 py-2.5 text-center"
+                    className="text-white bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm text-center"
                   >
                    Log Out
                   </button>
@@ -42,10 +42,10 @@ const logout = async () => {
               </li>
             ) : !isLoginPage && (
               <li>
-                <a href="/login" className="text-white">
+                <a href="/login">
                   <button
                     type="button"
-                    className="text-white bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm px-5 mr-10 py-2.5 text-center"
+                    className=" bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm px-5 mr-10 py-2.5 text-center"
                   >
                     Sign In
                   </button>

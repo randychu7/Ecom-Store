@@ -37,7 +37,7 @@ export default function SearchModal({movies}) {
                 genre_ids: movie.genre_ids,
                 vote_average: movie.vote_average,
                 youtubeTrailerKey: movie.youtubeTrailerKey,
-                
+
               };
     
          console.log(data);
@@ -68,7 +68,7 @@ export default function SearchModal({movies}) {
         <div className="h-full w-full flex items-center justify-center fixed overflow-auto top-0 bg-black" style={{zIndex:99999}}>
             {modalOpen ? <Details closeModal={closeModalHandler} movieId={selectedMovieId} /> : ''} 
             
-            <div className='grid grid-cols-2 md:grid-cols-4 pb-[4em] mt-[35em] lg:grid-cols-5 gap-x-11 gap-y-[120px]'>
+            <div className='grid grid-cols-2 md:grid-cols-4 pb-[4em] mt-[55em] mr-[7em] lg:grid-cols-5 gap-x-11 gap-y-[120px]'>
                 {movieCards}
             </div>
 

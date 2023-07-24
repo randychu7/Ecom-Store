@@ -9,6 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
 import Youtube from 'react-youtube';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objectId }) => {
@@ -56,6 +57,7 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
 
     const isListPage = location.pathname === '/my-list';
     const isDashboard = location.pathname === '/browse';
+    const isSearch = location.pathname === '/search';
   
     const opts = {
         height: '211',
@@ -109,13 +111,13 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
           <div
             dangerouslySetInnerHTML={{ __html: svg }}
             style={{ width: "100%", height: "100%", zIndex: 1 }}
-            className='text-[100px] md:text-[250px] flex justify-center font-bold items-center absolute right-[90px] md:right-[120px]'
+            className='text-[190px] 2xl:text-[300px] flex justify-center font-bold items-center absolute right-[66px] 2xl:right-[150px]'
           />
   
-          <div className='w-[240px] relative z-10'>
+          <div className='w-[200px] 2xl:w-[300px] relative z-10'>
           {movie.poster_path ? 
                 <img 
-                    className='h-[340px] w-full translate-y-[-21px] ml-10' 
+                    className='2xl:h-[360px] h-[290px] md:w-full translate-y-[-21px] ml-10' 
                     src={`${IMAGE_PATH}${movie.poster_path}`} 
                     alt=''
                 /> 
@@ -124,15 +126,15 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
           </div>
         </div>
 
-        <div className={`absolute left-[-5px] top-[-35px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
-                    style={{zIndex:9999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
+        <div className={`absolute top-[-35px] left-[-70px] 2xl:left-[-40px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
+                    style={{zIndex:99999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
                 >
                 <div className='flex h-full w-full flex-col'>
                 <div className='h-[60%] w-full relative' style={{backgroundImage:`url(https://image.tmdb.org/t/p/w500${movie.poster_path})`,
                 backgroundSize: 'cover', }}>
                     <div className='absolute w-full h-full top-0 bg-black opacity-40'></div>
 
-                    {showPlayer && <div className='absolute w-[50px]'> <Youtube videoId={movie.youtubeTrailerKey} opts={opts}/></div>}
+                    {showPlayer && <div className='absolute w-[50px]' style={{zIndex:99998}}> <Youtube videoId={movie.youtubeTrailerKey} opts={opts}/></div>}
 
 
                 <h2 className='absolute left-0 bottom-0 p-4 font-bold w-[50%] text-white'>{movie.title}</h2> 
@@ -140,40 +142,16 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
                 <div className='h-[40%] w-full'>
                         <div className='h-full w-full'>
 
-            <div className='w-full p-5 pb-4 pt-3 flex items-center'>
+            <div className='w-full pb-4 pt-3 flex items-center'>
 
-
-            {hoveredMovie ? (
-                    <div>
-                    <div className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[-32px] flex justify-center rounded-xl">
-                        <p className="mt-3 font-bold">Play Trailer</p>
-                    </div>
-                    <div className="absolute bottom-[118px] text-white">
-                        <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
-                    </div>
-                    </div>
-                ) : null}
-
-
-<div
-                onClick={() => {
-                    setShowPlayer(true);
-                    setPlayerKey(prevKey => prevKey + 1);  // increment key to remount the player
-                }}
-                onMouseEnter={handleMouseHover}
-                onMouseLeave={handleMouseLeave}
-                className="w-[40px] h-[40px] relative bg-white hover:bg-gray-400 flex items-center justify-center rounded-full"
-            >
-                <PlayArrowIcon sx={{ fontSize: "30px", color: isHovered ? 'gray' : 'gray-400' }} />
-            </div>
 
                 {hoveredMovie1 ? (
                     <div>
-                    <div className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[12px] flex justify-center rounded-xl">
-                       
-                       {isListPage ? <p className="mt-3 font-bold">Remove From List</p> : <p className="mt-3 font-bold">Add To List</p>}
-                       
-                    </div>
+                        <div style={{zIndex:99999}} className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[12px] flex justify-center rounded-xl">
+                        
+                        {isListPage ? <p className="mt-3 font-bold">Remove From List</p> : <p className="mt-3 font-bold">Add To List</p>}
+                        
+                        </div>
                     <div className="absolute bottom-[118px] left-[68px] text-white">
                         <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
                     </div>
@@ -185,7 +163,8 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
                     onMouseLeave={handleMouseLeave1} 
                     className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'
                 >
-                    {isListPage ? <RemoveIcon/> : isDashboard && verify ? <CheckIcon/> : <AddIcon/>}
+                    {isListPage ? <RemoveIcon/> : (isDashboard || isSearch) && verify ? <CheckIcon/> : <AddIcon/>}
+                    
                 </div>
 
                             
@@ -193,7 +172,7 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
 
                 {hoveredMovie2 ? (
                     <div>
-                    <div className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[60px] flex justify-center rounded-xl">
+                    <div style={{zIndex:99999}} className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[60px] flex justify-center rounded-xl">
                        
                        <p className="mt-3 font-bold">Details</p>
                        

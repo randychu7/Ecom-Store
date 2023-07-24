@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
 
+
   const modalHandler = () => {
     setModalOpen(true);
     console.log(selectedMovieId);
@@ -87,28 +88,31 @@ export default function Dashboard() {
       });
   
       const movies = response.data.results;
-      setComedy(movies);
-
-    } catch (error) {
-      console.error('Failed to fetch movies by genre:', error);
-      // Handle errors as needed, e.g., show an error message in the UI
-      return [];
-    }
-  }
-
-  async function fetchMystery() {
-    try {
-      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-        params: {
-          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
-          language: 'en-US',
-          with_genres: 9648, // Specify the genre ID here
-        },
-      });
   
-      const movies = response.data.results;
-      setMystery(movies);
-
+      // Fetch the YouTube trailer key for each movie
+      const moviesWithTrailerKeys = await Promise.all(
+        movies.map(async (movie) => {
+          try {
+            const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+              params: {
+                api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+                language: 'en-US',
+              },
+            });
+  
+            const videos = videosResponse.data.results;
+            const youtubeTrailer = videos.find((video) => video.site === 'YouTube' && video.type === 'Trailer');
+            const youtubeTrailerKey = youtubeTrailer?.key || null;
+  
+            return { ...movie, youtubeTrailerKey };
+          } catch (error) {
+            console.error('Failed to fetch YouTube trailer key:', error);
+            return { ...movie, youtubeTrailerKey: null };
+          }
+        })
+      );
+  
+      setComedy(moviesWithTrailerKeys);
     } catch (error) {
       console.error('Failed to fetch movies by genre:', error);
       // Handle errors as needed, e.g., show an error message in the UI
@@ -116,7 +120,52 @@ export default function Dashboard() {
     }
   }
 
-  async function fetchCrime() {
+
+async function fetchMystery() {
+  try {
+    const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+      params: {
+        api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+        language: 'en-US',
+        with_genres: 9648, // Specify the genre ID here
+      },
+    });
+
+    const movies = response.data.results;
+
+    // Fetch the YouTube trailer key for each movie
+    const moviesWithTrailerKeys = await Promise.all(
+      movies.map(async (movie) => {
+        try {
+          const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+            params: {
+              api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+              language: 'en-US',
+            },
+          });
+
+          const videos = videosResponse.data.results;
+          const youtubeTrailer = videos.find((video) => video.site === 'YouTube' && video.type === 'Trailer');
+          const youtubeTrailerKey = youtubeTrailer?.key || null;
+
+          return { ...movie, youtubeTrailerKey };
+        } catch (error) {
+          console.error('Failed to fetch YouTube trailer key:', error);
+          return { ...movie, youtubeTrailerKey: null };
+        }
+      })
+    );
+
+    setMystery(moviesWithTrailerKeys);
+  } catch (error) {
+    console.error('Failed to fetch movies by genre:', error);
+    // Handle errors as needed, e.g., show an error message in the UI
+    return [];
+  }
+}
+
+
+async function fetchCrime() {
     try {
       const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
         params: {
@@ -127,54 +176,126 @@ export default function Dashboard() {
       });
   
       const movies = response.data.results;
-      setCrime(movies);
-
-    } catch (error) {
-      console.error('Failed to fetch movies by genre:', error);
-      // Handle errors as needed, e.g., show an error message in the UI
-      return [];
-    }
-  }
-
-  async function fetchRomance() {
-    try {
-      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-        params: {
-          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
-          language: 'en-US',
-          with_genres: 10749, // Specify the genre ID here
-        },
-      });
   
-      const movies = response.data.results;
-      setRomance(movies);
-
-    } catch (error) {
-      console.error('Failed to fetch movies by genre:', error);
-      // Handle errors as needed, e.g., show an error message in the UI
-      return [];
-    }
-  }
-
-  async function fetchWar() {
-    try {
-      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-        params: {
-          api_key: import.meta.env.VITE_APP_MOVIE_KEY,
-          language: 'en-US',
-          with_genres: 10752, // Specify the genre ID here
-        },
-      });
+      // Fetch the YouTube trailer key for each movie
+      const moviesWithTrailerKeys = await Promise.all(
+        movies.map(async (movie) => {
+          try {
+            const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+              params: {
+                api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+                language: 'en-US',
+              },
+            });
   
-      const movies = response.data.results;
-      setWar(movies);
-
+            const videos = videosResponse.data.results;
+            const youtubeTrailer = videos.find((video) => video.site === 'YouTube' && video.type === 'Trailer');
+            const youtubeTrailerKey = youtubeTrailer?.key || null;
+  
+            return { ...movie, youtubeTrailerKey };
+          } catch (error) {
+            console.error('Failed to fetch YouTube trailer key:', error);
+            return { ...movie, youtubeTrailerKey: null };
+          }
+        })
+      );
+  
+      setCrime(moviesWithTrailerKeys);
     } catch (error) {
       console.error('Failed to fetch movies by genre:', error);
       // Handle errors as needed, e.g., show an error message in the UI
       return [];
     }
   }
+
+
+
+async function fetchRomance() {
+  try {
+    const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+      params: {
+        api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+        language: 'en-US',
+        with_genres: 10749, // Specify the genre ID here for Romance
+      },
+    });
+
+    const movies = response.data.results;
+
+    // Fetch the YouTube trailer key for each movie
+    const moviesWithTrailerKeys = await Promise.all(
+      movies.map(async (movie) => {
+        try {
+          const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+            params: {
+              api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+              language: 'en-US',
+            },
+          });
+
+          const videos = videosResponse.data.results;
+          const youtubeTrailer = videos.find((video) => video.site === 'YouTube' && video.type === 'Trailer');
+          const youtubeTrailerKey = youtubeTrailer?.key || null;
+
+          return { ...movie, youtubeTrailerKey };
+        } catch (error) {
+          console.error('Failed to fetch YouTube trailer key:', error);
+          return { ...movie, youtubeTrailerKey: null };
+        }
+      })
+    );
+
+    setRomance(moviesWithTrailerKeys);
+  } catch (error) {
+    console.error('Failed to fetch movies by genre:', error);
+    // Handle errors as needed, e.g., show an error message in the UI
+    return [];
+  }
+}
+
+async function fetchWar() {
+  try {
+    const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+      params: {
+        api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+        language: 'en-US',
+        with_genres: 10752, // Specify the genre ID here for War
+      },
+    });
+
+    const movies = response.data.results;
+
+    // Fetch the YouTube trailer key for each movie
+    const moviesWithTrailerKeys = await Promise.all(
+      movies.map(async (movie) => {
+        try {
+          const videosResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+            params: {
+              api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+              language: 'en-US',
+            },
+          });
+
+          const videos = videosResponse.data.results;
+          const youtubeTrailer = videos.find((video) => video.site === 'YouTube' && video.type === 'Trailer');
+          const youtubeTrailerKey = youtubeTrailer?.key || null;
+
+          return { ...movie, youtubeTrailerKey };
+        } catch (error) {
+          console.error('Failed to fetch YouTube trailer key:', error);
+          return { ...movie, youtubeTrailerKey: null };
+        }
+      })
+    );
+
+    setWar(moviesWithTrailerKeys);
+  } catch (error) {
+    console.error('Failed to fetch movies by genre:', error);
+    // Handle errors as needed, e.g., show an error message in the UI
+    return [];
+  }
+}
+
 
   useEffect(() => {
     fetchWar();   
@@ -324,12 +445,15 @@ const handleSubmit = async (movie) => {
      {modalOpen ? <Details closeModal={closeModalHandler} movieId={selectedMovieId} /> : ''} 
 
       <div className="w-full h-[55em] relative">
+
       <div className="bg-slate-500 flex w-full h-full relative" 
      style={{ 
          backgroundImage: `url(https://image.tmdb.org/t/p/w500${movies[0].backdrop_path}), linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7))`, 
          backgroundSize: 'cover', 
          backgroundBlendMode: 'overlay',
-     }}>
+     }}>     
+
+
 
 
 
@@ -344,7 +468,9 @@ const handleSubmit = async (movie) => {
 
 
 
+
         <div className='w-[50%] h-full justify-center items-center absolute top-0 flex flex-col'>
+       
             <div className='w-[80%] '>
                 <h1 className='text-6xl text-white font-bold'>{movies[0].title}</h1>
                 <div className='w-full mt-3 flex items-center'>
@@ -352,13 +478,15 @@ const handleSubmit = async (movie) => {
                 <p className='w-full text-2xl ml-4 text-white'>#1 in Movies Today</p>
             
             </div>
-            <div className='mt-3 text-white'><p>{movies[0].overview}</p></div>
-            <div className='w-full mt-5 flex items-center just'>
-                <button className='bg-white rounded-md hover:bg-gray-300 text-black w-[150px] h-[55px]  text-[23px] flex items-center justify-center'><PlayArrowIcon sx={{fontSize:"47px"}}/> <p className='mr-4'>Play</p></button>
-             
-            </div>
+            <div className='mt-6 text-white'><p>{movies[0].overview}</p></div>
+          
+         
+
+
+
                 
                 </div>
+               
           
         </div>
       </div>

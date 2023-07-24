@@ -59,6 +59,12 @@ export default function SignUp() {
         }
     };
     
+    const logout = async () => {
+  
+      localStorage.removeItem('token');
+      window.location.href = "/login";
+    
+    };
       
 
   return (
@@ -66,7 +72,7 @@ export default function SignUp() {
        <nav>
             <div className="flex absolute top-0 left-0 right-0 flex-wrap pb-[2px] items-center border-b-2 justify-between  mx-auto" style={{ zIndex: 1000 }}>
                 
-                  <div className="items-center w-full md:order-1">
+                  <div className="items-center w-full  md:order-1">
                     <ul className="flex justify-between items-center font-medium md:p-0 mt-4 rounded-lg md:space-x-8 md:mt-0 md:border-0">
                   <li><a className="flex items-center">
                     <img src="../netflix.png" className=" h-[40px] md:h-[110px] ml-6" alt=" Logo" />
@@ -74,14 +80,14 @@ export default function SignUp() {
                     
 
                     {hasToken ? (
-                        <li className=" w-[40px] h-[40px] bg-white rounded-full flex items-center justify-center">
-                          <a href="#" className="block py-2 pl-3 text-2xl pr-4 rounded md:p-0 ">
+                        <li className=" flex items-center justify-center">
+                          <a href="#" className="mr-3 text-xl pr-4 rounded md:p-0 ">
                             Sign Out
                           </a>
                         </li>
                       ) : (
                         <li>
-                          <a href="/login" className="text-white">
+                          <a onClick={logout} className="text-white">
                             <button
                               type="button"
                               className="text-black text-[14px] md:text-[20px] px-5 mr-10 py-2.5 text-center"
@@ -99,7 +105,7 @@ export default function SignUp() {
                 </div>
         </nav>
 
-        <div className={`w-[300px] -translate-y-44 flex flex-col justify-center items-center ${!next ? '' : "-translate-x-[50px] opacity-0 transition-all duration-200"}`} >
+        <div className={`w-[300px] -translate-y-44 mt-[12em] 2xl:mt-[0em] flex flex-col justify-center items-center ${!next ? '' : "-translate-x-[50px] opacity-0 transition-all duration-200"}`} >
           <div className='w-full flex justify-center mb-6'><CheckCircleOutlineIcon sx={{fontSize:"50px", color:"#ee3d3d"}}/></div>
           
           <p className='text-center text-[12px]'>STEP <span>3</span> OF <span>3</span></p>

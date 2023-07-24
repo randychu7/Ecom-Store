@@ -9,6 +9,7 @@ import Signup2 from './pages/signup2';
 import List from './pages/list';
 import Search from './pages/search';
 import Navlog from './components/navbar/navlog';
+import ProtectedRoute from './pages/protected';
 
 function App() {
   return (
@@ -22,9 +23,21 @@ function App() {
           <Route path="/signup" element={<Signup/>} />
           <Route path="/signup1" element={<Signup1/>} />
           <Route path="/signup2" element={<Signup2/>} />
-          <Route path="/browse" element={<Dashboard />} />
-          <Route path="/my-list" element={<List />} />
-          <Route path="/search" element={<Search/>} />
+          <Route path="/browse" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }/>
+          <Route path="/my-list" element={
+            <ProtectedRoute>
+              <List />
+            </ProtectedRoute>
+          }/>
+          <Route path="/search" element={
+            <ProtectedRoute>
+              <Search/>
+            </ProtectedRoute>
+          }/>
         </Routes>
 
        

@@ -50,12 +50,12 @@ export default function SignIn() {
     srcSet="https://assets.nflxext.com/ffe/siteui/vlv3/ce221d7a-8901-41d9-b726-3ea2efe3a650/0b3dc3ab-67fa-49bd-9d78-c6557c01e5b4/US-en-20230703-popsignuptwoweeks-perspective_alpha_website_small.jpg 1000w, https://assets.nflxext.com/ffe/siteui/vlv3/ce221d7a-8901-41d9-b726-3ea2efe3a650/0b3dc3ab-67fa-49bd-9d78-c6557c01e5b4/US-en-20230703-popsignuptwoweeks-perspective_alpha_website_medium.jpg 1500w, https://assets.nflxext.com/ffe/siteui/vlv3/ce221d7a-8901-41d9-b726-3ea2efe3a650/0b3dc3ab-67fa-49bd-9d78-c6557c01e5b4/US-en-20230703-popsignuptwoweeks-perspective_alpha_website_large.jpg 1800w"
     className="w-full h-full object-cover"
   />
-  <div className="w-full h-full bg-black absolute top-0 md:opacity-50"></div>
+  <div className="w-full h-full bg-black absolute top-0 md:opacity-50 rounded-2xl"></div>
 
-  <div className="absolute top-[42%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full md:h-[700px] md:w-[460px]">
+  <div className="absolute top-[42%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[70%] 2xl:h-[50em] rounded-xl md:w-[460px]">
   
-  <div className="relative w-full h-full">
-    <div className="before:absolute rounded-lg before:inset-0 before:bg-black before:opacity-70 before:content-['']"></div>
+  <div className="relative w-full rounded-xl h-full">
+    <div className="before:absolute rounded-lg before:inset-0 before:bg-black  before:opacity-70 before:content-['']"></div>
       <div className="absolute inset-0 flex justify-center">
 
         <div className="text-white w-[75%]">
@@ -113,7 +113,7 @@ export default function SignIn() {
               </div>
 
               <div>
-                <h2 className='mt-16  md:mt-4 text-[15px] text-gray-400'>New to Netflix? <a href='/signup' className='text-white hover:underline hover:cursor-pointer'>Sign up now.</a></h2>
+                <h2 className='mt-[35px] text-[15px] text-gray-400'>New to Netflix? <a href='/signup' className='text-white hover:underline hover:cursor-pointer'>Sign up now.</a></h2>
 
                 <p className='text-[12px] mt-4 text-gray-400'>This page is protected by Google reCAPTCHA to ensure you're not a bot. <span className='text-blue-500'>Learn more.</span></p>
               </div>
@@ -134,7 +134,7 @@ export default function SignIn() {
 </div>
 
  
-<div className='absolute bottom-0 w-full -translate-y-[14em] md:translate-y-0 md:border-0 border-t-2 border-[#4f4f4f] h-[15em] md:opacity-70  bg-black'>
+<div className='absolute bottom-0 w-full -translate-y-[14em] md:translate-y-0 md:border-0 border-t-2 border-[#4f4f4f] 2xl:h-[15em] md:opacity-70  bg-black'>
         <div className='text-gray-300 p-8 opacity-40 md:opacity-80'>
           <h2 >Questions? Call <span className='underline'>1-844-505-2993</span></h2>
           <div className='grid underline text-[13px] mt-7 grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4'>
