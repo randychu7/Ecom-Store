@@ -104,6 +104,7 @@ export default function List() {
         
     <div className="w-[95%] h-full">
       <div className="mt-[6em] ml-[100px]">
+        
         <h1 className="text-2xl text-white">My List</h1>
       </div>
       <div className="w-full mt-[3em] h-[50%] flex justify-center">

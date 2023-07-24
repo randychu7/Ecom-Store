@@ -59,6 +59,7 @@ export default function SignUp() {
         }
     };
     
+    
     const logout = async () => {
   
       localStorage.removeItem('token');

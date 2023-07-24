@@ -2,7 +2,6 @@ import * as React from 'react';
 import Navbar from '../components/navbar/navbar';
 import {useState} from 'react';
 import axios from 'axios';
-import Footer from '../components/navbar/footer';
 
 
 
