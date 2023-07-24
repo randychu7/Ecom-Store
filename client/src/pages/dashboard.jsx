@@ -27,8 +27,6 @@ export default function Dashboard() {
  const closeModalHandler = () => {
     setModalOpen(false);
  }
-
-
   const convertDurationToHoursMinutes = (duration) => {  
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
@@ -36,7 +34,6 @@ export default function Dashboard() {
     return `${hours}h ${minutes}m`;
   };
   
-
   const fetchMovies = async () => {
     try {
       const { data: { results } } = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
@@ -55,6 +52,7 @@ export default function Dashboard() {
           });
   
           const movieDetails = response.data;
+          console.log(movieDetails);
           const duration = movieDetails.runtime;
           const convertedDuration = convertDurationToHoursMinutes(duration);
   
@@ -210,7 +208,7 @@ const handleSubmit = async (movie) => {
     try {
         const data = {
             userId: userId,
-            movieId: movie.id,
+            id: movie.id,
             title: movie.title,
             description: movie.overview,
             poster_path: movie.poster_path,
@@ -315,20 +313,8 @@ const handleSubmit = async (movie) => {
         />
       );
   })
-
-
-
-
-
-
-
-
   return (
-
-
-
     <div>
-      <NavLog />
 
      {modalOpen ? <Details closeModal={closeModalHandler} movieId={selectedMovieId} /> : ''} 
 
@@ -364,7 +350,7 @@ const handleSubmit = async (movie) => {
             <div className='mt-3 text-white'><p>{movies[0].overview}</p></div>
             <div className='w-full mt-5 flex items-center just'>
                 <button className='bg-white rounded-md hover:bg-gray-300 text-black w-[150px] h-[55px]  text-[23px] flex items-center justify-center'><PlayArrowIcon sx={{fontSize:"47px"}}/> <p className='mr-4'>Play</p></button>
-                <button className='bg-gray-700 rounded-md text-white w-[210px] h-[60px] ml-3 text-[22px] flex items-center justify-center'><InfoOutlinedIcon sx={{fontSize:"47px"}}/> <p className='ml-3'>More Info</p></button>
+             
             </div>
                 
                 </div>

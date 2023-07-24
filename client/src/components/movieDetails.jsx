@@ -9,7 +9,7 @@ import jwtDecode from 'jwt-decode';
 import {useLocation} from 'react-router-dom'
 import RemoveIcon from '@mui/icons-material/Remove';
 
-export default function Details({closeModal, movieId}) {
+export default function Details({closeModal, movieId , object, updateMovies}) {
     const [movieDetails, setMovieDetails] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [verify, setVerify] = useState(false);
@@ -55,7 +55,7 @@ export default function Details({closeModal, movieId}) {
     
             const duration = movieDetails.runtime;
             const convertedDuration = convertDurationToHoursMinutes(duration);
-    
+            console.log(movieDetails);
             return {
                 ...movieDetails,
                 duration: convertedDuration,
@@ -74,7 +74,7 @@ export default function Details({closeModal, movieId}) {
         try {
             const data = {
                 userId: userId,
-                movieId: movieDetails.id,
+                id: movieDetails.id,
                 title: movieDetails.title,
                 description: movieDetails.overview,
                 poster_path: movieDetails.poster_path,
@@ -107,6 +107,20 @@ export default function Details({closeModal, movieId}) {
     if (!movieDetails) {
         return null; // or some loading indicator
     }
+
+    const removeMovie = async (movieId) => {
+        try {
+          await axios.delete(`http://localhost:5080/api/favorites/delete/${movieId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          updateMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== movieId));
+
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     
 
@@ -141,7 +155,14 @@ export default function Details({closeModal, movieId}) {
 
                                                                 <button className='bg-white rounded-md hover:bg-gray-300 text-black w-[120px] h-[35px] text-[15px] flex items-center justify-center'><PlayArrowIcon sx={{fontSize:"30px"}}/> <p className='mr-4'>Play</p></button>
 
-                                                                <div onClick={() => {addMovie(); verifyHandler();}}   
+                                                                <div  onClick={() => {
+                                                                        if (isListPage) {
+                                                                            removeMovie(object);
+                                                                        } else {
+                                                                            addMovie();
+                                                                            verifyHandler();
+                                                                        }
+                                                                    }}   
                                                                     className='w-[40px] h-[40px] relative border-2 bg-gray-600 ml-2 text-gray-400 border-gray-400 hover:border-white hover:text-white flex items-center justify-center rounded-full'
                                                                 >
                                                                     {isListPage ? <RemoveIcon/> : isDashboard && verify ? <CheckIcon/> : <AddIcon/>}
@@ -155,7 +176,7 @@ export default function Details({closeModal, movieId}) {
                                 
                                     </div>
 
-                                <div className='flex pb-10'>
+                                <div className='flex pb-5'>
                                     <div className='w-[70%] flex flex-col justify-center text-white p-6'>
                                         <div className='w-[93%] flex'>
                                             <p className='text-green-500'>

@@ -11,12 +11,12 @@ const isLoginPage = location.pathname === '/login';
 
 const hasToken = localStorage.getItem('token') !== null;
 
-const logoutHandler = () =>{
+const logout = async () => {
+  
   localStorage.removeItem('token');
- 
-  window.location.reload();
-}
+  window.location.href = "/login";
 
+};
 
   return (
     <nav>
@@ -29,8 +29,8 @@ const logoutHandler = () =>{
           <ul className="flex flex-col items-center font-medium md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
         
           {hasToken ? (
-              <li className="hover:translate-y-[-3px] transition-transform w-[40px] h-[40px] bg-white rounded-full flex items-center justify-center">
-                <a href='/logout' className="block py-2 pl-3 text-2xl pr-4 rounded md:p-0 ">
+              <li className="hover:translate-y-[-3px] transition-transform flex items-center justify-center">
+                <a onClick={logout} className="block py-2 pl-3 text-2xl pr-4 rounded md:p-0 ">
                 <button
                     type="button"
                    

@@ -2,18 +2,57 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Searchbar from '../searchbar';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import {useLocation} from 'react-router-dom';
+
+import SearchModal from './searchModal';
 import axios from 'axios';
 
 export default function navLogin (){
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showSearchModal, setShowSearchModal] = useState(false);
+    const [movies, setMovies] = useState([]);
+    const location = useLocation();
+
+    const isHomePage = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signup';
 
     const handleMouseEnter = () => {
       setShowDropdown(true);
     };
-  
+
+
+       
+    const searchMovies = async (searchValue) => {
+      try {
+          const { data } = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
+              params: {
+                  api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+                  language: 'en-US',
+                  query: searchValue,
+                  page: 1,
+                  include_adult: false,
+              }
+          });
+          setMovies(data.results); // update the movies state
+      } catch (error) {
+          console.error('Failed to search movies:', error);
+      }
+  };
+
+  const handleSearch = (searchValue) => {
+    if (searchValue) {
+        // fetch data from API and then show the modal
+        searchMovies(searchValue);
+        setShowSearchModal(true);
+    } else {
+        setShowSearchModal(false); // hide modal if searchValue is empty
+    }
+};
+
+ 
+
     const handleMouseLeave = () => {
       setShowDropdown(false);
     };
@@ -24,11 +63,18 @@ export default function navLogin (){
           window.location.href = "/login";
 
       };
-      
+
+   
     return (
 
-        <nav>
-        <div className="flex absolute top-0 left-0 right-0 flex-wrap items-center justify-between mx-auto mr-8 ml-6" style={{ zIndex: 1000 }}>
+      <>
+      
+      {isHomePage ? null :       <div>
+
+<nav>
+      {showSearchModal ? <SearchModal movies={movies}/> : ''}
+
+        <div className="flex absolute top-0 left-0 right-0 flex-wrap items-center justify-between mx-auto mr-8 ml-6" style={{ zIndex: 99999 }}>
           <div className='flex items-center'>
             <a className="flex items-center hover:cursor-pointer">
               <img src="../netflix.png" className="h-[70px] md:h-[70px] ml-6" alt="Logo" />
@@ -44,15 +90,16 @@ export default function navLogin (){
           <div className="items-center flex md:w-auto md:order-1">
             <ul className="flex flex-col items-center font-medium md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0">
               <li className="flex items-center justify-center">
+              <div className='hidden md:flex mr-6'>
+                      <Searchbar onSearch={handleSearch}/>
+                    </div>
                 <a href="#" className="py-2 pl-3 text-2xl pr-4 md:p-0">
                   <div
                     className='flex justify-center items-center relative'
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className='hidden md:flex mr-6'>
-                      <Searchbar />
-                    </div>
+                   
                     <NotificationsNoneIcon sx={{ color: "white", fontSize: "30px", marginRight: "9px" }} />
                     <div className='flex items-center'>
                       <img
@@ -104,6 +151,13 @@ export default function navLogin (){
           </div>
         </div>
       </nav>
+
+      </div>
+}
+
+      </>
+
+
     )
 
 }

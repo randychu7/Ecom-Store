@@ -10,7 +10,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
 
 
-const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId }) => {
+const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objectId }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [verify, setVerify] = useState(false);
     const [hoveredMovie1, setHoveredMovie1] = useState(false);
@@ -182,9 +182,17 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId }) => 
                 ) : null}
 
                 <div onMouseEnter={handleMouseHover2}
-                onMouseLeave={handleMouseLeave2} onClick={() =>{ modalChange(); setSelectedMovieId(movie.id);}} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
+                onMouseLeave={handleMouseLeave2} 
+                onClick={() =>{ 
+                    modalChange(); 
+                    setSelectedMovieId(movie.id);
+                    objectId(movie._id) 
+                    
+                    }} className='w-[40px] h-[40px] relative border-2 ml-2 text-gray-500 border-gray-500 hover:border-white hover:text-white flex items-center justify-center rounded-full'>
                     <KeyboardArrowDownIcon/>
                 </div>
+
+                
             </div>
            
            <div className='w-full flex flex-col p-5 pt-0 text-gray-200 '>

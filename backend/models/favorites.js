@@ -8,7 +8,7 @@ const favoritesSchema = new mongoose.Schema(
         required: true,
       },
       
-      movieId: {
+      id: {
         type: String,
         required: true,
       },
