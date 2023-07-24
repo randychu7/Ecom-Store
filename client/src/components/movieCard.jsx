@@ -1,37 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AddIcon from '@mui/icons-material/Add';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import {useLocation} from 'react-router-dom';
 import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
 import Youtube from 'react-youtube';
-import zIndex from '@mui/material/styles/zIndex';
 
 
 const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objectId }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [verify, setVerify] = useState(false);
     const [hoveredMovie1, setHoveredMovie1] = useState(false);
-    const [hoveredMovie, setHoveredMovie] = useState(false);
     const [hoveredMovie2, setHoveredMovie2] = useState(false);
     const [showPlayer, setShowPlayer] = useState(false);
-    const [playerKey, setPlayerKey] = useState(0);  // new state for YouTube player key
-
 
     const verifyHandler = () => {
         setVerify(true);
-    }
-
-    const handleMouseHover = () => {
-        setHoveredMovie(true);
-    }
-
-    const handleMouseLeave = () => {
-        setHoveredMovie(false);
     }
 
     const handleMouseHover1 = () => {
@@ -147,12 +133,12 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
 
                 {hoveredMovie1 ? (
                     <div>
-                        <div style={{zIndex:99999}} className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[12px] flex justify-center rounded-xl">
+                        <div style={{zIndex:99999}} className="h-[50px] w-[150px] bg-white absolute bottom-[140px] left-[-52px] flex justify-center rounded-xl">
                         
                         {isListPage ? <p className="mt-3 font-bold">Remove From List</p> : <p className="mt-3 font-bold">Add To List</p>}
                         
                         </div>
-                    <div className="absolute bottom-[118px] left-[68px] text-white">
+                    <div className="absolute bottom-[118px] left-[7px] text-white">
                         <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
                     </div>
                     </div>

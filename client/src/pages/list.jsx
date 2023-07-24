@@ -44,7 +44,7 @@ export default function List() {
   const fetchList = async () => {
 
     try {
-      const { data } = await axios.get(`http://localhost:5080/api/favorites/${userId}`, {
+      const { data } = await axios.get(`https://netflix-mern-a2a236f0a8be.herokuapp.com/api/favorites/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         }
@@ -64,7 +64,7 @@ export default function List() {
   const removeMovie = async (movieId) => {
 
     try {
-      await axios.delete(`http://localhost:5080/api/favorites/delete/${movieId}`, {
+      await axios.delete(`https://netflix-mern-a2a236f0a8be.herokuapp.com/api/favorites/delete/${movieId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -104,7 +104,7 @@ export default function List() {
         
     <div className="w-[95%] h-full">
       <div className="mt-[6em] ml-[100px]">
-        
+
         <h1 className="text-2xl text-white">My List</h1>
       </div>
       <div className="w-full mt-[3em] h-[50%] flex justify-center">

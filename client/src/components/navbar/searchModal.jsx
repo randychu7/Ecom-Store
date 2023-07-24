@@ -42,7 +42,7 @@ export default function SearchModal({movies}) {
     
          console.log(data);
       
-          const response = await axios.post("http://localhost:5080/api/favorites/add", data, {
+          const response = await axios.post("https://netflix-mern-a2a236f0a8be.herokuapp.com/api/favorites/add", data, {
             
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -68,7 +68,7 @@ export default function SearchModal({movies}) {
         <div className="h-full w-full flex items-center justify-center fixed overflow-auto top-0 bg-black" style={{zIndex:99999}}>
             {modalOpen ? <Details closeModal={closeModalHandler} movieId={selectedMovieId} /> : ''} 
             
-            <div className='grid grid-cols-2 md:grid-cols-4 pb-[4em] mt-[55em] mr-[7em] lg:grid-cols-5 gap-x-11 gap-y-[120px]'>
+            <div className='grid grid-cols-2 md:grid-cols-4 pb-[4em] mt-[30em] md:mt-[] xl:mt-[35em] mr-[7em] lg:grid-cols-5 gap-x-11 gap-y-[120px]'>
                 {movieCards}
             </div>
 

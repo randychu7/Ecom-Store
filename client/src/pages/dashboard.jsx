@@ -345,7 +345,7 @@ const handleSubmit = async (movie) => {
 
      console.log(data);
   
-      const response = await axios.post("http://localhost:5080/api/favorites/add", data, {
+      const response = await axios.post("https://netflix-mern-a2a236f0a8be.herokuapp.com/api/favorites/add", data, {
         
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -19,7 +19,7 @@ export default function SignIn() {
           console.log(data);
             e.preventDefault();
             try {
-              const res = await axios.post('http://localhost:5080/api/auth/login', {
+              const res = await axios.post('https://netflix-mern-a2a236f0a8be.herokuapp.com/api/auth/login', {
                   email: data.email,
                   password: data.password
               });

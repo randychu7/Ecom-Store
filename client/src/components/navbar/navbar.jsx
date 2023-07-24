@@ -1,7 +1,4 @@
 
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import NightlightIcon from '@mui/icons-material/Nightlight';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
@@ -34,7 +31,7 @@ const logout = async () => {
                 <button
                     type="button"
                    
-                    className="text-white bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm text-center"
+                    className="text-white bg-[#DB0012] w-[75px] h-[40px] mr-10 focus:outline-none font-medium rounded-md text-sm text-center"
                   >
                    Log Out
                   </button>
@@ -45,7 +42,7 @@ const logout = async () => {
                 <a href="/login">
                   <button
                     type="button"
-                    className=" bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm px-5 mr-10 py-2.5 text-center"
+                    className="text-white bg-[#DB0012] focus:outline-none font-medium rounded-md text-sm px-5 mr-10 py-2.5 text-center"
                   >
                     Sign In
                   </button>
