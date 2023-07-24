@@ -47,30 +47,34 @@ export default function Dashboard() {
           const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}`, {
             params: {
               api_key: import.meta.env.VITE_APP_MOVIE_KEY,
-              append_to_response: 'release_dates' // Include release_dates in the response
+              append_to_response: 'release_dates,videos' // Include release_dates and videos in the response
             }
           });
   
           const movieDetails = response.data;
-          console.log(movieDetails);
           const duration = movieDetails.runtime;
           const convertedDuration = convertDurationToHoursMinutes(duration);
   
+          // Get the YouTube key for the first trailer video
+          const youtubeTrailerKey = movieDetails.videos.results.find(video => video.site === "YouTube" && video.type === "Trailer")?.key;
+  
           return {
             ...movie,
-            duration: convertedDuration
+            duration: convertedDuration,
+            youtubeTrailerKey: youtubeTrailerKey // Add the YouTube trailer key to the movie object
           };
         })
       );
   
       setMovies(moviesWithDetails);
+      console.log(moviesWithDetails);
       setIsLoading(false); // set loading state to false
     } catch (error) {
       console.log(error);
       setIsLoading(false); // set loading state to false
     }
   };
-
+  
   
   async function fetchComedy() {
     try {
@@ -215,6 +219,7 @@ const handleSubmit = async (movie) => {
             duration: movie.duration,
             genre_ids: movie.genre_ids,
             vote_average: movie.vote_average,
+            youtubeTrailerKey: movie.youtubeTrailerKey
           };
 
      console.log(data);

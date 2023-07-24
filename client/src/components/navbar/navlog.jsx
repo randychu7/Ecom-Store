@@ -68,7 +68,6 @@ export default function navLogin (){
     return (
 
       <>
-      
       {isHomePage ? null :       <div>
 
 <nav>
@@ -154,7 +153,6 @@ export default function navLogin (){
 
       </div>
 }
-
       </>
 
 

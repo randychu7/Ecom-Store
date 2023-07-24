@@ -18,6 +18,7 @@ const favoritesSchema = new mongoose.Schema(
       duration: { type: String },
       vote_average: { type: Number },
       genre_ids: [{ type: Number }],
+      youtubeTrailerKey: {type: String},
     },
     { timestamps: true }
   );

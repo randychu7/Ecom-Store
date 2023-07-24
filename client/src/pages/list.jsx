@@ -4,12 +4,17 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import Details from "../components/movieDetails";
+import {useLocation} from 'react-router-dom';
 
 export default function List() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [movies, setMovies] = useState([]);
     const [object, setObject] = useState(null);
+    const location = useLocation();
+
+    const currentpath = location.pathname;
+
 
     const modalHandler = () => {
       setModalOpen(true);
@@ -76,7 +81,7 @@ export default function List() {
   
 
   const renderMovies = movies.map((movie) => {
-   console.log(object)   
+   console.log(movies)   
     return (
       <MovieCard
       key={movie.id}
@@ -102,7 +107,7 @@ export default function List() {
         <h1 className="text-2xl text-white">My List</h1>
       </div>
       <div className="w-full mt-[3em] h-[50%] flex justify-center">
-        <div className=" w-[80%] md:w-[90%] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-[10px]  ">
+        <div className=" w-[80%] md:w-[90%] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-[130px]  ">
           {renderMovies}
         </div>
       </div>

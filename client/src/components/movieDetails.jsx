@@ -8,14 +8,35 @@ import CheckIcon from '@mui/icons-material/Check';
 import jwtDecode from 'jwt-decode';
 import {useLocation} from 'react-router-dom'
 import RemoveIcon from '@mui/icons-material/Remove';
+import Youtube from 'react-youtube';
 
 export default function Details({closeModal, movieId , object, updateMovies}) {
     const [movieDetails, setMovieDetails] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [verify, setVerify] = useState(false);
+    const [hideplay, setHidePlay] = useState(true);
     const location = useLocation();
     const isListPage = location.pathname === '/my-list';
     const isDashboard = location.pathname === '/browse';
+    const [showPlayer, setShowPlayer] = useState(false);
+
+
+    const handlerPlayButton = () => {
+        setHidePlay(false);
+    }
+
+    const playerHandler = () =>{
+        setShowPlayer(true);
+    }
+
+    const opts = {
+        height: '481',
+        width: '800',
+        playerVars: {
+            autoplay: 1,
+        }
+    }
+
 
      const convertDurationToHoursMinutes = (duration) => {  
     const hours = Math.floor(duration / 60);
@@ -36,7 +57,7 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
 
     async function fetchMovieDetails(movieId) {
         try {
-            const [movieResponse, creditsResponse] = await Promise.all([
+            const [movieResponse, creditsResponse, videosResponse] = await Promise.all([
                 axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
                     params: {
                         api_key: import.meta.env.VITE_APP_MOVIE_KEY,
@@ -48,23 +69,36 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
                         api_key: import.meta.env.VITE_APP_MOVIE_KEY,
                     }
                 }),
+                axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, {
+                    params: {
+                        api_key: import.meta.env.VITE_APP_MOVIE_KEY,
+                    }
+                }),
             ]);
     
             const movieDetails = movieResponse.data;
             const cast = creditsResponse.data.cast;
+            const videos = videosResponse.data.results;
     
             const duration = movieDetails.runtime;
             const convertedDuration = convertDurationToHoursMinutes(duration);
-            console.log(movieDetails);
+    
+            // Get the YouTube key for the first trailer video
+            const youtubeTrailerKey = videos.find(video => video.site === "YouTube" && video.type === "Trailer")?.key;
+            
             return {
                 ...movieDetails,
                 duration: convertedDuration,
                 cast: cast,
+                youtubeTrailerKey: youtubeTrailerKey // Add the YouTube trailer key to the movie object
+                
             };
+            
         } catch (error) {
             console.error("Failed to fetch movie details: ", error);
             // Handle errors as needed, e.g., show an error message in the UI
         }
+
     }
     
 
@@ -80,6 +114,7 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
                 poster_path: movieDetails.poster_path,
                 genre_ids: movieDetails.genre,
                 vote_average: movieDetails.vote_average,
+                youtubeTrailerKey: movieDetails.youtubeTrailerKey,
               };
 
               console.log(data)
@@ -102,6 +137,7 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
         fetchMovieDetails(movieId).then(details => setMovieDetails(details));
         const timer = setTimeout(() => setIsAnimating(true), 100);
         return () => clearTimeout(timer);  // clear the timer when the component unmounts
+        
     }, [movieId]);
 
     if (!movieDetails) {
@@ -127,7 +163,7 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
     return (
         <div className="relative rounded-lg">
             <div className="fixed top-0 h-full w-full bg-black opacity-80" onClick={closeModal} style={{zIndex:99998}}>
-       
+            {console.log(movieDetails)}
              </div>
 
              <div 
@@ -148,14 +184,22 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
                                     backgroundSize: 'cover', 
                                     backgroundBlendMode: 'overlay',
                                 }}>
-                                            <div className='absolute bottom-0 p-10  text-white'>
+
+                                    {showPlayer ? <Youtube videoId={movieDetails.youtubeTrailerKey} opts={opts} /> : null}
+
+                                            {hideplay ? <div className='absolute bottom-0 p-10  text-white'>
                                                         <h2 className='text-5xl mb-7'>{movieDetails.title}</h2>
                                                 
                                                         <div className='flex '>
 
-                                                                <button className='bg-white rounded-md hover:bg-gray-300 text-black w-[120px] h-[35px] text-[15px] flex items-center justify-center'><PlayArrowIcon sx={{fontSize:"30px"}}/> <p className='mr-4'>Play</p></button>
+                                                                <button onClick={()=>{
+                                                                    playerHandler();
+                                                                    handlerPlayButton();
+                                                                    
+                                                                }} 
+                                                                 className='bg-white rounded-md hover:bg-gray-300 text-black w-[120px] h-[35px] text-[15px] flex items-center justify-center'><PlayArrowIcon sx={{fontSize:"30px"}}/> <p className='mr-4'>Play</p></button>
 
-                                                                <div  onClick={() => {
+                                                                <div onClick={() => {
                                                                         if (isListPage) {
                                                                             removeMovie(object);
                                                                         } else {
@@ -171,7 +215,7 @@ export default function Details({closeModal, movieId , object, updateMovies}) {
 
                                                         </div>
                                                  
-                                             </div>                
+                                             </div> : ' '     }           
                                     
                                 
                                     </div>

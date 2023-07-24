@@ -36,6 +36,8 @@ export default function SearchModal({movies}) {
                 duration: movie.duration,
                 genre_ids: movie.genre_ids,
                 vote_average: movie.vote_average,
+                youtubeTrailerKey: movie.youtubeTrailerKey,
+                
               };
     
          console.log(data);

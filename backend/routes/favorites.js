@@ -5,7 +5,7 @@ const Favorites = require("../models/favorites");
 
 router.post("/add", async (req, res) => {
   try {
-    const { userId, vote_average, id, title, description, poster_path, duration, genre_ids } = req.body;
+    const { userId, vote_average, youtubeTrailerKey, id, title, description, poster_path, duration, genre_ids } = req.body;
 
     // Check if the movie with the same movieId exists in favorites
     const existingFavorite = await Favorites.findOne({userId: userId, id: id });
@@ -24,6 +24,7 @@ router.post("/add", async (req, res) => {
       duration,
       genre_ids,
       vote_average,
+      youtubeTrailerKey
     });
 
     const savedFavorite = await newFavorite.save();

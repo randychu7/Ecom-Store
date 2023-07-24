@@ -8,6 +8,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
+import Youtube from 'react-youtube';
 
 
 const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objectId }) => {
@@ -16,7 +17,9 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
     const [hoveredMovie1, setHoveredMovie1] = useState(false);
     const [hoveredMovie, setHoveredMovie] = useState(false);
     const [hoveredMovie2, setHoveredMovie2] = useState(false);
-  
+    const [showPlayer, setShowPlayer] = useState(false);
+    const [playerKey, setPlayerKey] = useState(0);  // new state for YouTube player key
+
 
     const verifyHandler = () => {
         setVerify(true);
@@ -54,7 +57,14 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
     const isListPage = location.pathname === '/my-list';
     const isDashboard = location.pathname === '/browse';
   
-
+    const opts = {
+        height: '211',
+        width: '401',
+        playerVars: {
+            // https://developers.google.com/youtube/player_parameters
+            autoplay: 1,
+        },
+    };
 
     const getGenres = async () => {
         try{
@@ -83,9 +93,16 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
 
     return (
       <div 
-        className='relative' 
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+            className='relative' 
+            onMouseEnter={() => {
+                setIsHovered(true);
+                setShowPlayer(true); // Start the video when mouse enters
+            }}
+            onMouseLeave={() => {
+                setIsHovered(false);
+                setShowPlayer(false); // Stop the video when mouse leaves
+            }}
+
       > 
       
         <div className="flex justify-center relative h-[15em]">
@@ -107,8 +124,6 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
           </div>
         </div>
 
-        
-        
         <div className={`absolute left-[-5px] top-[-35px] rounded-lg shadow-dark  bg-[#101010]  transition-all h-[22em] w-[25em] duration-500 ease-in-out transform-gpu`} 
                     style={{zIndex:9999, opacity: isHovered ? 1 : 0, transform: isHovered ? 'scale(1)' : 'scale(0)' }}
                 >
@@ -116,6 +131,10 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
                 <div className='h-[60%] w-full relative' style={{backgroundImage:`url(https://image.tmdb.org/t/p/w500${movie.poster_path})`,
                 backgroundSize: 'cover', }}>
                     <div className='absolute w-full h-full top-0 bg-black opacity-40'></div>
+
+                    {showPlayer && <div className='absolute w-[50px]'> <Youtube videoId={movie.youtubeTrailerKey} opts={opts}/></div>}
+
+
                 <h2 className='absolute left-0 bottom-0 p-4 font-bold w-[50%] text-white'>{movie.title}</h2> 
                 </div>
                 <div className='h-[40%] w-full'>
@@ -136,13 +155,17 @@ const MovieCard = ({ movie, svg, onClick, modalChange, setSelectedMovieId, objec
                 ) : null}
 
 
-            <div
+<div
+                onClick={() => {
+                    setShowPlayer(true);
+                    setPlayerKey(prevKey => prevKey + 1);  // increment key to remount the player
+                }}
                 onMouseEnter={handleMouseHover}
                 onMouseLeave={handleMouseLeave}
                 className="w-[40px] h-[40px] relative bg-white hover:bg-gray-400 flex items-center justify-center rounded-full"
-                >
+            >
                 <PlayArrowIcon sx={{ fontSize: "30px", color: isHovered ? 'gray' : 'gray-400' }} />
-                </div>
+            </div>
 
                 {hoveredMovie1 ? (
                     <div>
