@@ -1,5 +1,6 @@
 # Netflix-Clone
 
+Live Site:
 https://netflix-randy.netlify.app/
 
 The MERN Netflix project is a full-stack web application that replicates the core features of the popular video streaming platform Netflix. The application allows users to browse a vast library of movies and TV shows, watch trailers, and add their favorite content to a personalized watchlist. It incorporates the MERN stack, which consists of MongoDB, Express.js, React, and Node.js, to provide a robust and efficient solution for managing data and serving the user interface.
