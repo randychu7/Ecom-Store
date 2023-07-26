@@ -13,41 +13,53 @@ Users can sign up and create accounts with unique credentials.
 Existing users can log in securely to access their personalized content.
 
 Home Page:
+
 The home page displays a curated selection of movies and TV shows.
 Featured content is showcased with posters and titles.
 
 Browse Movies and TV Shows:
+
 Users can explore a comprehensive catalog of movies and TV shows.
 Content is organized by genres, popularity, and release date.
 
 Movie and TV Show Details:
+
 Detailed information is available for each title, including a synopsis, cast, and ratings.
 Users can view trailers for selected movies and TV shows.
 
 Favorites:
+
 Users can mark movies and TV shows as favorites.
 Favorited content is stored separately for quick access.
 
 Responsive Design:
+
 The application is optimized for various screen sizes, including desktop and mobile devices.
 
 Search Functionality:
+
 Users can search for specific movies and TV shows based on titles and keywords.
 
 User Profiles:
+
 Each user has a unique profile page that showcases their watchlist and favorite content.
 
 Secure APIs:
+
 Backend APIs are secured with authentication to ensure data privacy.
 
 Error Handling:
+
 The application handles errors gracefully, providing feedback to users when issues arise.
 
 Trailer Playback:
+
 Movie and TV show trailers are played directly within the application.
 
 Pagination:
+
 Long lists of content are paginated to improve performance and user experience.
 
 Logout:
+
 Users can log out securely to protect their accounts.
